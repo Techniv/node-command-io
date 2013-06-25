@@ -1,0 +1,25 @@
+{
+	"name": "command.io",
+	"version": "0.0.0-dev",
+	"description": "",
+
+	"authors": [],
+
+	"main": "libs/commandio.js",
+
+	"homepage": "",
+	"license": "MIT",
+
+	"repository":{
+		"type":	"git",
+		"url":	"https://github.com/Techniv/node-command-io.git"
+	},
+
+	"engine": {"node": ">=0.8.*"},
+
+	"devDependencies": {
+		"grunt": "*",
+		"grunt-contrib-nodeunit": "*"
+	}
+
+}

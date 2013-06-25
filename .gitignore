@@ -16,3 +16,5 @@ npm-debug.log
 .idea
 .settings
 nb-project
+
+node_modules
