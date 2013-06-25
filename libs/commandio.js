@@ -5,6 +5,8 @@
  * Time: 16:31
  * To change this template use File | Settings | File Templates.
  */
+var EventEmitter = require('events').EventEmitter;
+var emitter = new EventEmitter();
 
 // Get the stream input node console
 var stdin = process.stdin;
@@ -19,19 +21,44 @@ stdin.setEncoding('UTF-8');
 stdin.on('data', function(key){
 
     // Parse the command line
-    parseCommand(key);
+    var params = parseCommand(key);
+
+    // Process the command
+    processCommand(params);
 });
 
 var parseCommand = function(key){
 
     // Remove the carryage return character
-    key.replace("\n", "");
+    key = key.replace("\n", "");
 
     // Split the command line to get the command key and the arguments
     var split = key.split(" ");
 
-    // Get the command key and remove it from the split array. So the split array are the arguments
-    var command = split.shift();
+    return split;
 }
+
+var processCommand = function(params){
+
+    // Get the command key
+    var command = params.shift();
+
+    // Create an emitter and broadcast the command
+    emitter.emit(command, params);
+}
+
+var addCommand = function(name, action){
+
+    // Listen the command
+    emitter.on(name, function(){
+
+        // Call the callback with the global context and the arguments array
+        action.apply(global, arguments);
+    });
+}
+
+module.exports = {
+    addCommand: addCommand
+};
 
 
