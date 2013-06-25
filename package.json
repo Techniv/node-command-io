@@ -3,16 +3,30 @@
 	"version": "0.0.0-dev",
 	"description": "",
 
-	"authors": [],
+	"authors": {
+		"name": "Vincent Peybernes",
+		"email": "vpeybernes.pro@gmail.com",
+		"url":"https://plus.google.com/117597625821202130678?rel=author"
+	},
+	"contributor":[
+		{
+			"name": "Thomas Pons"
+		}
+	],
 
 	"main": "libs/commandio.js",
 
-	"homepage": "",
+	"homepage": "https://github.com/Techniv/node-command-io",
 	"license": "MIT",
+	"keywords": ["console", "command", "stdin", "console io"],
 
 	"repository":{
 		"type":	"git",
 		"url":	"https://github.com/Techniv/node-command-io.git"
+	},
+
+	"bugs": {
+		"url": "https://github.com/Techniv/node-command-io/issues"
 	},
 
 	"engine": {"node": ">=0.8.*"},

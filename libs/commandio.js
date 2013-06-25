@@ -30,7 +30,7 @@ stdin.on('data', function(key){
 var parseCommand = function(key){
 
     // Remove the carryage return character
-    key = key.replace("\n", "");
+    key = key.replace(/\r?\n$/, "");
 
     // Split the command line to get the command key and the arguments
     var split = key.split(" ");
@@ -50,10 +50,10 @@ var processCommand = function(params){
 var addCommand = function(name, action){
 
     // Listen the command
-    emitter.on(name, function(){
+    emitter.on(name, function(params){
 
         // Call the callback with the global context and the arguments array
-        action.apply(global, arguments);
+        action.apply(global, params);
     });
 }
 
