@@ -68,6 +68,9 @@ function addCommand(name, description, action){
         // Call the callback with the global context and the arguments array
         action.apply(global, params);
     });
+
+    // Chain addCommand
+    return module.exports;
 };
 
 function beforeExit(action){
@@ -78,7 +81,7 @@ function beforeExit(action){
 
 function help(name){
 
-	// Add black line separation.
+	// Add blank line separation.
 	console.log('--');
 
     // If the command is present
@@ -100,7 +103,7 @@ function help(name){
         }
     }
 
-	// Add black line separation.
+	// Add blank line separation.
 	console.log('--');
 }
 
