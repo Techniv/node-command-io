@@ -1,5 +1,7 @@
+
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
+var stdin = process.stdin;
 var commandDescriptor = {};
 
 // Listen the help command
@@ -11,9 +13,6 @@ emitter.on('help', function(params){
 emitter.on('exit', function(){
     process.exit(0);
 });
-
-// Get the stream input node console
-var stdin = process.stdin;
 
 // Flush the stream input buffer
 stdin.resume();
@@ -31,7 +30,7 @@ stdin.on('data', function(key){
     processCommand(params);
 });
 
-var parseCommand = function(key){
+function parseCommand(key){
 
     // Remove the carryage return character
     key = key.replace(/\r?\n$/, "");
@@ -40,18 +39,18 @@ var parseCommand = function(key){
     var split = key.split(" ");
 
     return split;
-}
+};
 
-var processCommand = function(params){
+function processCommand(params){
 
     // Get the command key
     var command = params.shift();
 
     // Create an emitter and broadcast the command
     emitter.emit(command, params);
-}
+};
 
-var addCommand = function(name, description, action){
+function addCommand(name, description, action){
 
     // Associate the command name with his description
     commandDescriptor[name] = description;
@@ -62,6 +61,10 @@ var addCommand = function(name, description, action){
         // Call the callback with the global context and the arguments array
         action.apply(global, params);
     });
+};
+
+function beforeExit(action){
+
 }
 
 function help(name){
