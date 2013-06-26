@@ -3,6 +3,7 @@ var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
 var stdin = process.stdin;
 var commandDescriptor = {};
+var exitActions = [];
 
 // Listen the help command
 emitter.on('help', function(params){
@@ -11,6 +12,12 @@ emitter.on('help', function(params){
 
 // Listen the exit command
 emitter.on('exit', function(){
+
+	// Execute the custom exit action, before closing application.
+	for(var i in exitActions){
+		exitActions[i].apply(global);
+	}
+
     process.exit(0);
 });
 
@@ -64,7 +71,9 @@ function addCommand(name, description, action){
 };
 
 function beforeExit(action){
+	if( typeof action != 'function') throw new Error('[command.io] The action must be a function.');
 
+	exitActions.push(action);
 }
 
 function help(name){
@@ -96,7 +105,8 @@ function help(name){
 }
 
 module.exports = {
-    addCommand: addCommand
+    addCommand: addCommand,
+	beforeExit: beforeExit
 };
 
 
