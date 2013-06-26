@@ -1,12 +1,16 @@
-/**
- * Created with JetBrains WebStorm.
- * User: vincent.peybernes
- * Date: 25/06/13
- * Time: 16:31
- * To change this template use File | Settings | File Templates.
- */
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
+var commandDescriptor = {};
+
+// Listen the help command
+emitter.on('help', function(params){
+    help.apply(this, params);
+});
+
+// Listen the exit command
+emitter.on('exit', function(){
+    process.exit(0);
+});
 
 // Get the stream input node console
 var stdin = process.stdin;
@@ -47,7 +51,10 @@ var processCommand = function(params){
     emitter.emit(command, params);
 }
 
-var addCommand = function(name, action){
+var addCommand = function(name, description, action){
+
+    // Associate the command name with his description
+    commandDescriptor[name] = description;
 
     // Listen the command
     emitter.on(name, function(params){
@@ -55,6 +62,29 @@ var addCommand = function(name, action){
         // Call the callback with the global context and the arguments array
         action.apply(global, params);
     });
+}
+
+function help(name){
+
+    // If the command is present
+    if(typeof name != 'undefined'){
+
+        // Get the description
+        var description = commandDescriptor[name];
+
+        // If the description exists print it
+        if(typeof description != 'undefined'){
+            console.log(name + " : " + description);
+        }else{
+            console.log("This command doesn't exists or doesn't have description. Enter help to see all the availables commands.")
+        }
+    //If the command is not present print all the commands with descriptions
+    }else{
+        for(var key in commandDescriptor){
+            console.log(key + " : " + commandDescriptor[key]);
+        }
+    }
+
 }
 
 module.exports = {
