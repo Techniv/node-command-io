@@ -66,6 +66,9 @@ var addCommand = function(name, description, action){
 
 function help(name){
 
+	// Add black line separation.
+	console.log('--');
+
     // If the command is present
     if(typeof name != 'undefined'){
 
@@ -85,6 +88,8 @@ function help(name){
         }
     }
 
+	// Add black line separation.
+	console.log('--');
 }
 
 module.exports = {
