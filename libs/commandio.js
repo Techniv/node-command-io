@@ -117,7 +117,11 @@ module.exports = {
 // UTILS
 
 function getConsoleWidth(){
-	var stdSize = process.stdout.getWindowSize();
+	try{
+		var stdSize = process.stdout.getWindowSize();
+	} catch (e){
+		var stdSize = [80];
+	}
 	return stdSize[0];
 }
 

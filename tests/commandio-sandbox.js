@@ -11,7 +11,3 @@ var context = {
 context.global = context;
 
 module.exports = sandbox(__dirname+'/../libs/commandio.js', context);
-
-module.exports.getConsoleWidth = function(){
-	return 80;
-}
