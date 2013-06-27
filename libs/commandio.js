@@ -4,6 +4,7 @@ var emitter = new EventEmitter();
 var stdin = process.stdin;
 var commandDescriptor = {};
 var exitActions = [];
+var indentLength = 15;
 
 // Listen the help command
 emitter.on('help', function(params){
@@ -92,14 +93,14 @@ function help(name){
 
         // If the description exists print it
         if(typeof description != 'undefined'){
-            console.log(name + " : " + description);
+            console.log(formatHelpLine(name,description));
         }else{
             console.log("This command doesn't exists or doesn't have description. Enter help to see all the availables commands.")
         }
     //If the command is not present print all the commands with descriptions
     }else{
         for(var key in commandDescriptor){
-            console.log(key + " : " + commandDescriptor[key]);
+            console.log(formatHelpLine(key,commandDescriptor[key])+'\n');
         }
     }
 
@@ -111,5 +112,41 @@ module.exports = {
     addCommand: addCommand,
 	beforeExit: beforeExit
 };
+
+
+// UTILS
+
+function getConsoleWidth(){
+	var stdSize = process.stdout.getWindowSize();
+	return stdSize[0];
+}
+
+function formatHelpLine(command, description){
+	var rows = [], consoleWidth = getConsoleWidth(), currantRow;
+
+	currantRow = command;
+	currantRow += (new Array(indentLength - command.length)).join(' ');
+	currantRow += description;
+	if(currantRow.length > consoleWidth){
+		while(currantRow.length > consoleWidth){
+
+			// Scan the end portion to find the last entire word before wrap.
+
+			for(var i = consoleWidth-1; i>=0; i--){
+				if(/\s/.test(currantRow[i])){
+					rows.push(currantRow.slice(0,i));
+					currantRow = currantRow.slice(i+1);
+					currantRow = currantRow.replace(/^\s/, '');
+					currantRow = (new Array(indentLength)).join(' ')+currantRow;
+					break;
+				}
+			}
+		}
+
+		return rows.join('\n');
+	} else {
+		return currantRow;
+	}
+}
 
 

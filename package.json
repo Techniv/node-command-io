@@ -33,7 +33,8 @@
 
 	"devDependencies": {
 		"grunt": "*",
-		"grunt-contrib-nodeunit": "*"
+		"grunt-contrib-nodeunit": "*",
+		"nodeunit": "*"
 	}
 
 }
