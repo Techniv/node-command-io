@@ -1,7 +1,7 @@
 {
 	"name": "command.io",
 	"version": "0.1.0",
-	"description": "",
+	"description": "Console io provider for running Node.JS applications.",
 
 	"authors": {
 		"name": "Vincent Peybernes",
