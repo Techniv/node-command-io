@@ -13,4 +13,17 @@ commandio.addCommand('test', "The test function", function(){
 
 commandio.beforeExit(function(){
 	console.log("I've just the time to say you good bye");
-})
+});
+
+commandio.addCommands([
+	{
+		name: 'cmd1',
+		description: 'Command 1',
+		action: function(arg){console.log(arg);}
+	},
+	{
+		name: 'cmd2',
+		description: 'Command 2',
+		action: function(arg){console.log(arg*2);}
+	}
+]);
