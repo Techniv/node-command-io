@@ -12,7 +12,7 @@ commandio.addCommand('test', "The test function", function(){
 });
 
 commandio.beforeExit(function(){
-	console.log("I've just the time to say you good bye");
+	console.log("I've just have time to say goodbye");
 });
 
 commandio.addCommands([
