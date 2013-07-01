@@ -10,6 +10,9 @@ can associate description that is used by Command.IO to generate an inline help.
 Command.IO is publish under [MIT license](https://raw.github.com/Techniv/node-command-io/master/LICENSE).
 
 [![NPM](https://npmjs.org/favicon.ico)](https://npmjs.org/package/command.io)
+```
+npm install command.io
+```
 
 ## API
 
