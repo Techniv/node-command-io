@@ -96,3 +96,11 @@ commandio.beforeExit(function(){
 	console.log('I just have time to say goodbye.');
 });
 ```
+
+
+## Planned features
+
+* Unification of command descriptor objet.
+* Action's feedback and exception processing.
+* Define and manage strategy on multiple definition for an existing command.
+* Configurable, interception of exit event and POSIX exit signal for *before exit* actions.
