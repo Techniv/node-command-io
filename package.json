@@ -1,6 +1,6 @@
 {
 	"name": "command.io",
-	"version": "0.1.0",
+	"version": "0.2.0-dev",
 	"description": "Console io provider for running Node.JS applications.",
 
 	"authors": {
@@ -10,7 +10,8 @@
 	},
 	"contributor":[
 		{
-			"name": "Thomas Pons"
+			"name": "Thomas Pons",
+			"url": "https://plus.google.com/115159838059233776202?rel=author"
 		}
 	],
 
@@ -30,6 +31,10 @@
 	},
 
 	"engine": {"node": ">=0.8.*"},
+
+	"dependencies": {
+		"colors": "0.6.x"
+	},
 
 	"devDependencies": {
 		"grunt": "*",

@@ -25,7 +25,7 @@ Command.IO provide by defaut two commands on the application run :
 
 For developpers, Command.IO provides the folowing methods :
 
-- **addCommand**: Registers a command and its action.
+- **addCommand**: Registers a command and its action. **refactoring in progress**
 - **addCommands**: Registers a list of command.
 - **beforeExit**: Resters a 'before exit' action (execute on exit command).
 
@@ -38,6 +38,9 @@ var commandio = require('command.io');
 ```
 
 #### Add commands.
+**Warning**
+There are a refactoring process on this command. [Check this acticle](https://github.com/Techniv/node-command-io/wiki/Command-descriptor-refactoring).
+
 The `addCommand` methode take three parameters : the name of command, the description for help
 generation and the action callback. This command return the Command.IO API and its call can be chained.
 ```javascript

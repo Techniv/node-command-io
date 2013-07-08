@@ -11,13 +11,24 @@
  * <https://raw.github.com/Techniv/node-command-io/master/LICENSE>
  */
 
-
+var logger = require('./logger');
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
 var stdin = process.stdin;
 var commandDescriptor = {};
 var exitActions = [];
 var indentLength = 15;
+var CONST = {
+	descriptorType: {
+		name: 'string',
+		description: 'string',
+		action: 'function'
+	},
+	descriptorOptType: {
+
+	}
+}
+
 
 // Listen the help command
 emitter.on('help', function(params){
@@ -78,16 +89,28 @@ function processCommand(params){
  * @param action Function
  * @returns Object return Command.IO API.
  */
-function addCommand(name, description, action){
+function addCommand(descriptor){
+	// Check descriptor type.
+	var err = {};
+	if( !checkDescriptor(descriptor, err) ){
+		logger.error(
+			'The command descriptor is invalid.',
+			new Error('[command.io] Invalid command descriptor ("'+err.key+'": expected "'+err.expect+'", have "'+err.type+'").')
+		);
+		logger.error('Please check this doc: https://github.com/Techniv/node-command-io/wiki/Command-descriptor-refactoring');
+		return module.exports;
+	}
+
+	var name = descriptor.name;
 
     // Associate the command name with his description
-    commandDescriptor[name] = description;
+    commandDescriptor[name] = descriptor.description;
 
     // Listen the command
     emitter.on(name, function(params){
 
         // Call the callback with the global context and the arguments array
-        action.apply(global, params);
+        descriptor.action.apply(global, params);
     });
 
     // Chain addCommand
@@ -102,7 +125,7 @@ function addCommand(name, description, action){
 function addCommands(commands){
 	for(var i in commands){
 		var commandObj = commands[i];
-		addCommand(commandObj.name, commandObj.description, commandObj.action);
+		addCommand(commandObj);
 	}
 
 	return module.exports;
@@ -194,4 +217,27 @@ function formatHelpLine(command, description){
 	} else {
 		return currantRow;
 	}
+}
+
+function checkDescriptor(descriptor, err){
+
+	for(var key in CONST.descriptorType){
+		if(typeof descriptor[key] != CONST.descriptorType[key]){
+			err.key = key;
+			err.expect = CONST.descriptorType[key];
+			err.type = typeof descriptor[key];
+			return false;
+		}
+	}
+
+	for(var key in CONST.descriptorOptType){
+		if(typeof descriptor[key] != 'undefined' && typeof descriptor[key] != CONST.descriptorType[key]){
+			err.key = key;
+			err.expect = CONST.descriptorType[key];
+			err.type = typeof descriptor[key];
+			return false;
+		}
+	}
+
+	return true;
 }
