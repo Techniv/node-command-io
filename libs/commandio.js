@@ -219,8 +219,13 @@ function formatHelpLine(command, description){
 	}
 }
 
+/**
+ * Check if the command descriptor is valid.
+ * @return boolean
+ */
 function checkDescriptor(descriptor, err){
-
+	if(typeof descriptor != 'object') return false;
+	
 	for(var key in CONST.descriptorType){
 		if(typeof descriptor[key] != CONST.descriptorType[key]){
 			err.key = key;
