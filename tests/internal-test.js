@@ -29,6 +29,16 @@ module.exports = {
 
 		test.ok(runtimeCommandError instanceof commandio.CommandError, 'Error inheritance');
 
+		test.equal(commandError.level, commandio.CONST.errorLvl.error);
+		test.equal(runtimeCommandError.level, commandio.CONST.errorLvl.critical);
+
+		test.equal(typeof commandError.command, 'undefined', 'Undefined command');
+		test.equal(typeof runtimeCommandError.command, 'undefined', 'Undefined command');
+
+		runtimeCommandError = new commandio.RuntimeCommandError('test', 'cmd');
+
+		test.equal(runtimeCommandError.command, 'cmd', 'Defined command');
+
 		test.done();
 	}
 }

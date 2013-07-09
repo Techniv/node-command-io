@@ -17,19 +17,23 @@ var emitter = new EventEmitter();
 
 var stdin = process.stdin,
 	commandDescriptor = {},
-	commandContoler = {},
 	exitActions = [],
 	indentLength = 15,
 	CONST = {
-	descriptorType: {
-		name: 'string',
-		description: 'string',
-		action: 'function'
-	},
-	descriptorOptType: {
+		descriptorType: {
+			name: 'string',
+			description: 'string',
+			action: 'function'
+		},
+		descriptorOptType: {
 
+		},
+		errorLvl: {
+			notice:		1,
+			error:		2,
+			critical:	3
+		}
 	}
-}
 
 
 // Listen the help command
@@ -250,12 +254,27 @@ function checkDescriptor(descriptor, err){
 }
 
 // ERRORS
-
-function CommandError(message){
+/**
+ * Custom error object to manage exceptions on command's action.
+ * @param string message The error message.
+ * @param string command The command name what throw the error.
+ * @param int level The severity level (1,2 or 3 to notice, error, critical).
+ * @constructor
+ */
+function CommandError(message, command, level){
 	var that = this, error;
 
-	error = new Error('[command.io] '+message);
+	// Set the default level.
+	if( isNaN(level) || level < 1 || level > 3) level = CONST.errorLvl.error;
 
+	// Format the message
+	if(typeof command == 'string') message = '{'+command+'} '+message;
+	message = '[command.io] '+message;
+
+	// Create the native Error object.
+	error = new Error(message);
+
+	// Create the getter for native error properties and custom properties.
 	Object.defineProperties(this, {
 		'stack': {
 			get: function(){
@@ -271,12 +290,30 @@ function CommandError(message){
 			get: function(){
 				return that.constructor.name;
 			}
+		},
+		command: {
+			get: function(){
+				return command;
+			}
+		},
+		level: {
+			get: function(){
+				return level;
+			}
 		}
 	});
 }
 CommandError.prototype.__proto__ = Error.prototype;
 
-function RuntimeCommandError(message){
-	CommandError.call(this, message);
+/**
+ * Custom error object to manage exceptions on command's action. This is error was throw to runtime level.
+ * All runtime error have a critical severity level.<br/>
+ * This error extend {@link CommandError}
+ * @param string message The error message.
+ * @param string command The command name what throw the error.
+ * @constructor
+ */
+function RuntimeCommandError(message, command){
+	CommandError.call(this, message, command, CONST.errorLvl.critical);
 }
 RuntimeCommandError.prototype.__proto__ = CommandError.prototype;
