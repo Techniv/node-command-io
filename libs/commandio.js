@@ -14,11 +14,13 @@
 var logger = require(__dirname+'/logger');
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
-var stdin = process.stdin;
-var commandDescriptor = {};
-var exitActions = [];
-var indentLength = 15;
-var CONST = {
+
+var stdin = process.stdin,
+	commandDescriptor = {},
+	commandContoler = {},
+	exitActions = [],
+	indentLength = 15,
+	CONST = {
 	descriptorType: {
 		name: 'string',
 		description: 'string',
@@ -246,3 +248,35 @@ function checkDescriptor(descriptor, err){
 
 	return true;
 }
+
+// ERRORS
+
+function CommandError(message){
+	var that = this, error;
+
+	error = new Error('[command.io] '+message);
+
+	Object.defineProperties(this, {
+		'stack': {
+			get: function(){
+				return error.stack;
+			}
+		},
+		message: {
+			get: function(){
+				return error.message;
+			}
+		},
+		name: {
+			get: function(){
+				return that.constructor.name;
+			}
+		}
+	});
+}
+CommandError.prototype.__proto__ = Error.prototype;
+
+function RuntimeCommandError(message){
+	CommandError.call(this, message);
+}
+RuntimeCommandError.prototype.__proto__ = CommandError.prototype;
