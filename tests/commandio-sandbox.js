@@ -1,3 +1,6 @@
+var path = require('path');
+var libsPath = path.resolve(path.join(__dirname,'..','libs'));
+
 
 var sandbox = require('nodeunit').utils.sandbox;
 var context = {
@@ -6,8 +9,9 @@ var context = {
 		exports: {}
 	},
 	require: require,
-	console: console
+	console: console,
+	__dirname: libsPath
 };
 context.global = context;
 
-module.exports = sandbox(__dirname+'/../libs/commandio.js', context);
+module.exports = sandbox(path.join(libsPath,'commandio.js'), context);

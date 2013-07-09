@@ -11,7 +11,7 @@
  * <https://raw.github.com/Techniv/node-command-io/master/LICENSE>
  */
 
-var logger = require('./logger');
+var logger = require(__dirname+'/logger');
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
 var stdin = process.stdin;
