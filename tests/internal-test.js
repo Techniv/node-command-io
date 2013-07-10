@@ -14,5 +14,31 @@ module.exports = {
 
 		test.equal(endLine.length,formatEndLine);
 		test.done();
+	},
+
+	errors: function(test){
+
+		var commandError = new commandio.CommandError('test');
+		var runtimeCommandError = new commandio.RuntimeCommandError('test');
+
+		test.equal(commandError.name, 'CommandError', 'Error name');
+		test.equal(runtimeCommandError.name, 'RuntimeCommandError', 'Error name');
+
+		test.equal(typeof commandError.stack, 'string', 'Error stack');
+		test.equal(typeof runtimeCommandError.stack, 'string', 'Error stack');
+
+		test.ok(runtimeCommandError instanceof commandio.CommandError, 'Error inheritance');
+
+		test.equal(commandError.level, commandio.CONST.errorLvl.error);
+		test.equal(runtimeCommandError.level, commandio.CONST.errorLvl.critical);
+
+		test.equal(typeof commandError.command, 'undefined', 'Undefined command');
+		test.equal(typeof runtimeCommandError.command, 'undefined', 'Undefined command');
+
+		runtimeCommandError = new commandio.RuntimeCommandError('test', 'cmd');
+
+		test.equal(runtimeCommandError.command, 'cmd', 'Defined command');
+
+		test.done();
 	}
 }
