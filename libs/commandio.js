@@ -16,7 +16,6 @@ var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
 
 var stdin = process.stdin,
-	commandDescriptor = {},
 	exitActions = [],
 	indentLength = 15,
 	CONST = {
@@ -33,24 +32,20 @@ var stdin = process.stdin,
 			error:		2,
 			critical:	3
 		}
-	}
+	},
+	commandDescriptors = {
+		help: {
+			name: 'help',
+			description: 'Display this help message',
+			action: help
+		},
+		exit: {
+			name: 'help',
+			description: 'Execute the exit callback and close the application.',
+			action: exit
+		}
+	};
 
-
-// Listen the help command
-emitter.on('help', function(params){
-    help.apply(this, params);
-});
-
-// Listen the exit command
-emitter.on('exit', function(){
-
-	// Execute the custom exit action, before closing application.
-	for(var i in exitActions){
-		exitActions[i].apply(global);
-	}
-
-    process.exit(0);
-});
 
 // Flush the stream input buffer
 stdin.resume();
@@ -80,12 +75,17 @@ function parseCommand(key){
 }
 
 function processCommand(params){
-
     // Get the command key
     var command = params.shift();
+	var descriptor = commandDescriptors[command];
 
-    // Create an emitter and broadcast the command
-    emitter.emit(command, params);
+	// Call the action on the command controller.
+	try{
+		descriptor.action.apply(descriptor.controller, params);
+	} catch (e){
+		// TODO implement exception management.
+		throw e;
+	}
 }
 
 /**
@@ -108,16 +108,10 @@ function addCommand(descriptor){
 	}
 
 	var name = descriptor.name;
+	descriptor.controller = new CommandController(descriptor);
 
-    // Associate the command name with his description
-    commandDescriptor[name] = descriptor.description;
-
-    // Listen the command
-    emitter.on(name, function(params){
-
-        // Call the callback with the global context and the arguments array
-        descriptor.action.apply(global, params);
-    });
+    // Index the command descriptor
+    commandDescriptors[name] = descriptor;
 
     // Chain addCommand
     return module.exports;
@@ -160,7 +154,7 @@ function help(name){
     if(typeof name != 'undefined'){
 
         // Get the description
-        var description = commandDescriptor[name];
+        var description = commandDescriptors[name] ? commandDescriptors[name].description : undefined;
 
         // If the description exists print it
         if(typeof description != 'undefined'){
@@ -170,13 +164,23 @@ function help(name){
         }
     //If the command is not present print all the commands with descriptions
     }else{
-        for(var key in commandDescriptor){
-            console.log(formatHelpLine(key,commandDescriptor[key])+'\n');
+        for(var key in commandDescriptors){
+            console.log(formatHelpLine(key,commandDescriptors[key].description)+'\n');
         }
     }
 
 	// Add blank line separation.
 	console.log('--\n');
+}
+
+function exit(){
+
+	// Execute the custom exit action, before closing application.
+	for(var i in exitActions){
+		exitActions[i].apply(global);
+	}
+
+	process.exit(0);
 }
 
 module.exports = {
@@ -185,6 +189,51 @@ module.exports = {
 	beforeExit: beforeExit
 };
 
+
+/**
+ * CommandIO API to command action.
+ * @param descriptor The command descriptor.
+ */
+function CommandController(descriptor){
+
+	Object.defineProperties(this, {
+		name: {
+			get: function(){
+				return descriptor.name;
+			}
+		},
+		description: {
+			get: function(){
+				return descriptor.description;
+			}
+		},
+		CommandError: {
+			get: function(){
+				return LocalCommandError;
+			}
+		},
+		RuntimeCommandError: {
+			get: function (){
+				return LocalRuntimeCommandError;
+			}
+		},
+		errorLvl: {
+			get: function(){
+				return Object.create(CONST.errorLvl);
+			}
+		}
+	});
+
+	function LocalCommandError(message, level){
+		CommandError.call(this, message, descriptor.name, level);
+	}
+	LocalCommandError.prototype = Object.create(CommandError.prototype);
+
+	function LocalRuntimeCommandError(message){
+		RuntimeCommandError.call(this, message, descriptor.name);
+	}
+	LocalRuntimeCommandError.prototype = Object.create(CommandError.prototype);
+}
 
 // UTILS
 
@@ -286,11 +335,6 @@ function CommandError(message, command, level){
 				return error.message;
 			}
 		},
-		name: {
-			get: function(){
-				return that.constructor.name;
-			}
-		},
 		command: {
 			get: function(){
 				return command;
@@ -304,6 +348,11 @@ function CommandError(message, command, level){
 	});
 }
 CommandError.prototype.__proto__ = Error.prototype;
+Object.defineProperty(CommandError.prototype, 'name', {
+	get: function(){
+		return 'CommandError';
+	}
+});
 
 /**
  * Custom error object to manage exceptions on command's action. This is error was throw to runtime level.
@@ -317,3 +366,8 @@ function RuntimeCommandError(message, command){
 	CommandError.call(this, message, command, CONST.errorLvl.critical);
 }
 RuntimeCommandError.prototype.__proto__ = CommandError.prototype;
+Object.defineProperty(RuntimeCommandError.prototype, 'name', {
+	get: function(){
+		return 'RuntimeCommandError';
+	}
+});
