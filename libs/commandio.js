@@ -12,8 +12,6 @@
  */
 
 var logger = require(__dirname+'/logger');
-var EventEmitter = require('events').EventEmitter;
-var emitter = new EventEmitter();
 
 var stdin = process.stdin,
 	exitActions = [],
@@ -232,7 +230,7 @@ function CommandController(descriptor){
 	function LocalRuntimeCommandError(message){
 		RuntimeCommandError.call(this, message, descriptor.name);
 	}
-	LocalRuntimeCommandError.prototype = Object.create(CommandError.prototype);
+	LocalRuntimeCommandError.prototype = Object.create(RuntimeCommandError.prototype);
 }
 
 // UTILS
