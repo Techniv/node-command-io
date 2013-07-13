@@ -23,7 +23,7 @@ commandio.addCommand({
 });
 
 commandio.beforeExit(function(){
-	console.log("I've just have time to say goodbye");
+	console.log("I've just time to say goodbye");
 });
 
 commandio.addCommands([

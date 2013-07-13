@@ -76,6 +76,7 @@ function processCommand(params){
     // Get the command key
     var command = params.shift();
 	var descriptor = commandDescriptors[command];
+	if(typeof descriptor == 'undefined') return;
 
 	// Call the action on the command controller.
 	try{
