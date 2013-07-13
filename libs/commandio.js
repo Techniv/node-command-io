@@ -23,7 +23,7 @@ var stdin = process.stdin,
 			action: 'function'
 		},
 		descriptorOptType: {
-
+			exceptionCatchLvl: {type: 'number', value: '2'}
 		},
 		errorLvl: {
 			notice:		1,
@@ -290,12 +290,16 @@ function checkDescriptor(descriptor, err){
 	}
 
 	for(var key in CONST.descriptorOptType){
-		if(typeof descriptor[key] != 'undefined' && typeof descriptor[key] != CONST.descriptorType[key]){
-			err.key = key;
-			err.expect = CONST.descriptorType[key];
-			err.type = typeof descriptor[key];
-			return false;
+		if(typeof descriptor[key] != 'undefined' && typeof descriptor[key] == CONST.descriptorType[key]) continue;
+		if(typeof descriptor[key] == 'undefined'){
+			if(typeof CONST.descriptorOptType[key].value != 'undefined') descriptor[key] = CONST.descriptorOptType[key].value;
+			continue;
 		}
+
+		err.key = key;
+		err.expect = CONST.descriptorType[key];
+		err.type = typeof descriptor[key];
+		return false;
 	}
 
 	return true;
