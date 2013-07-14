@@ -29,12 +29,26 @@ commandio.beforeExit(function(){
 commandio.addCommands([
 	{
 		name: 'cmd1',
-		description: 'Command 1',
-		action: function(arg){console.log(arg);}
+		description: 'Throw notice',
+		action: function(arg){
+			console.log(arg);
+			throw new this.CommandError('Error cmd1', 1);
+		}
 	},
 	{
 		name: 'cmd2',
-		description: 'Command 2',
-		action: function(arg){console.log(arg*2);}
+		description: 'Throw critical error',
+		action: function(arg){
+			console.log(arg*2);
+			throw new this.CommandError('Error cmd2', 3);
+		}
+	},
+	{
+		name: 'cmd3',
+		description: 'Throw runtime error',
+		action: function(arg){
+			console.log(arg*2);
+			throw new this.RuntimeCommandError('Error cmd3');
+		}
 	}
 ]);

@@ -23,7 +23,7 @@ var stdin = process.stdin,
 			action: 'function'
 		},
 		descriptorOptType: {
-			exceptionCatchLvl: {type: 'number', value: '2'}
+			exceptionCatchLvl: {type: 'number', value: 3}
 		},
 		errorLvl: {
 			notice:		1,
@@ -82,8 +82,19 @@ function processCommand(params){
 	try{
 		descriptor.action.apply(descriptor.controller, params);
 	} catch (e){
-		// TODO implement exception management.
-		throw e;
+		switch(e.name){
+			case 'RuntimeCommandError':
+				logger.error('An unexpected error was occurred on "'+descriptor.name+'" command execution.');
+				throw e;
+				break;
+			case 'CommandError':
+				if(e.level >= descriptor.exceptionCatchLvl){
+					logger.error('An unexpected error was occurred on "'+descriptor.name+'" command execution.');
+					throw e;
+				}
+				break;
+		}
+		logger.error('An unexpected error was occurred on "'+descriptor.name+'" command execution.',e);
 	}
 }
 
@@ -290,14 +301,14 @@ function checkDescriptor(descriptor, err){
 	}
 
 	for(var key in CONST.descriptorOptType){
-		if(typeof descriptor[key] != 'undefined' && typeof descriptor[key] == CONST.descriptorType[key]) continue;
+		if(typeof descriptor[key] != 'undefined' && typeof descriptor[key] == CONST.descriptorOptType[key].type) continue;
 		if(typeof descriptor[key] == 'undefined'){
 			if(typeof CONST.descriptorOptType[key].value != 'undefined') descriptor[key] = CONST.descriptorOptType[key].value;
 			continue;
 		}
 
 		err.key = key;
-		err.expect = CONST.descriptorType[key];
+		err.expect = CONST.descriptorOptType[key].type;
 		err.type = typeof descriptor[key];
 		return false;
 	}

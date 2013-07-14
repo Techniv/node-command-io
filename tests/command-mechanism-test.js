@@ -33,11 +33,11 @@ module.exports = {
 	 * Test exception management.
 	 * Runtime never catch.
 	 * Errors are catch if their error lvl are >= exceptionCatchLvl parameter.
-	 * By default exceptionCatchLvl = 2 (3 for runtime).
+	 * By default exceptionCatchLvl = 1.
 	 * @param test
 	 */
 	throwingException: function(test){
-		test.expect(4);
+		test.expect(5);
 		var descriptor;
 
 
@@ -50,8 +50,23 @@ module.exports = {
 		};
 
 		commandio.addCommand(descriptor);
-		test.throws(function(){
+		test.doesNotThrow(function(){
 			commandio.processCommand(['error']);
+		});
+
+
+		descriptor = {
+			name: 'error2',
+			description: 'cdm desc',
+			exceptionCatchLvl: 1,
+			action: function(){
+				throw new this.CommandError('Error');
+			}
+		};
+
+		commandio.addCommand(descriptor);
+		test.throws(function(){
+			commandio.processCommand(['error2']);
 		});
 
 
@@ -72,14 +87,13 @@ module.exports = {
 		descriptor = {
 			name: 'error3',
 			description: 'cdm desc',
-			exceptionCatchLvl: 3,
 			action: function(){
-				throw new this.CommandError('Error');
+				throw new this.CommandError('Error', 3);
 			}
 		};
 
 		commandio.addCommand(descriptor);
-		test.doesNotThrow(function(){
+		test.throws(function(){
 			commandio.processCommand(['error3']);
 		});
 
@@ -87,7 +101,6 @@ module.exports = {
 		descriptor = {
 			name: 'runtime',
 			description: 'cdm desc',
-			exceptionCatchLvl: 0,
 			action: function(){
 				throw new this.RuntimeCommandError('Runtime Error');
 			}
