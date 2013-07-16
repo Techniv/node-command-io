@@ -4,26 +4,28 @@ var commandio = require('..');
 
 // Register a single command.
 // Take 3 parameters : the name of command, the description, the action callback.
-commandio.addCommand(
-	'command1',
-	'The first command',
-	function(){
+commandio.addCommand({
+	name: 'command1',
+	description: 'The first command',
+	action: function(){
 		console.log('Action of first command');
-	});
+	}
+});
 
 // You can chain the addCommand call.
-commandio.addCommand(
-	'command2',
-	'The second command',
-	function(){
+commandio.addCommand({
+	name: 'command2',
+	description: 'The second command',
+	action: function(){
 		console.log('Action of second command');
-	})
-.addCommand(
-	'command3',
-	'The third command',
-	function(){
+	}
+}).addCommand({
+	name: 'command3',
+	description: 'The third command',
+	action: function(){
 		console.log('Action of third command');
-	});
+	}
+});
 
 // The 'addCommands' method permit to register multiple command.
 // Take an array of object in parameter.

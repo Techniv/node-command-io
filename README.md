@@ -23,11 +23,19 @@ Command.IO provide by defaut two commands on the application run :
 - **help**: displays the description of registered commands.
 - **exit**: executes the 'before exit' actions and exit the application with exit code 0.
 
-For developpers, Command.IO provides the folowing methods :
+For developers, Command.IO provides the folowing methods :
 
-- **addCommand**: Registers a command and its action. **refactoring in progress**
+- **addCommand**: Registers a command and its action.
 - **addCommands**: Registers a list of command.
-- **beforeExit**: Resters a 'before exit' action (execute on exit command).
+- **beforeExit**: Registers a 'before exit' action (execute on exit command).
+
+The **addCommand** and **addCommands** methods use the **command descriptor**. This is an object what describe the
+command. It take this following parameters :
+- **name** (mandatory): this is the name of command used to recognize it when the user call it. Space are not allow.
+- **description** (mandatory): this is a description of your command what used to generate the inline help.
+- **action** (mandatory): this is a callback (function) what execute when the command is call.
+- **exceptionCatchLvl**: this is the minimum severity of error catches by Command.IO to not terminate the programme.
+Currently, only CommandErrors are caught.
 
 ### Exemple:
 
@@ -46,26 +54,28 @@ generation and the action callback. This command return the Command.IO API and i
 ```javascript
 var commandio = require('command.io');
 
-commandio.addCommand(
-	'command1',
-	'The first command',
-	function(){
+commandio.addCommand({
+	name: 'command1',
+	description: 'The first command',
+	action: function(){
 		console.log('Action of first command');
-	});
+	}
+});
 
 // Exemple of chained call.
-commandio.addCommand(
-	'command2',
-	'The second command',
-	function(){
+commandio.addCommand({
+	name: 'command2',
+	description: 'The second command',
+	action: function(){
 		console.log('Action of second command');
-	})
-.addCommand(
-	'command3',
-	'The third command',
-	function(){
+	}
+}).addCommand({
+	name: 'command3',
+	description: 'The third command',
+	action: function(){
 		console.log('Action of third command');
-	});
+	}
+});
 ```
 
 The `addCommands` take an array of objects what describe each commands.
@@ -100,10 +110,16 @@ commandio.beforeExit(function(){
 });
 ```
 
+## Changelog
+**0.2.0-dev:**
+- Unification of *command descriptor*.
+- Add custom execution context for command action.
+- Add custom error.
+- Add internal logger system using `color`.
+
 
 ## Planned features
 
-* Unification of command descriptor objet.
 * Action's feedback and exception processing.
 * Define and manage strategy on multiple definition for an existing command.
 * Configurable, interception of exit event and POSIX exit signal for *before exit* actions.
