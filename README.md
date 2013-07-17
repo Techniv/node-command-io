@@ -29,6 +29,8 @@ For developers, Command.IO provides the folowing methods :
 - **addCommands**: Registers a list of command.
 - **beforeExit**: Registers a 'before exit' action (execute on exit command).
 
+### Command descriptor
+
 The **addCommand** and **addCommands** methods use the **command descriptor**. This is an object what describe the
 command. It take this following parameters :
 - **name** (mandatory): this is the name of command used to recognize it when the user call it. Space are not allow.
@@ -37,7 +39,7 @@ command. It take this following parameters :
 - **exceptionCatchLvl**: this is the minimum severity of error catches by Command.IO to not terminate the programme.
 Currently, only CommandErrors are caught.
 
-### Exemple:
+## Exemple:
 
 #### Loading module:
 The module is initialized on load by require.
