@@ -121,7 +121,7 @@ commandio.beforeExit(function(){
 ```
 
 ## Changelog
-**0.2.0-dev:**
+**0.2.0-a:**
 - Unification of *command descriptor*.
 - Add custom execution context for command action.
 - Add custom error.
