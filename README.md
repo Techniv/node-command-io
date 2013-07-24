@@ -39,6 +39,14 @@ command. It take this following parameters :
 - **exceptionCatchLvl**: this is the minimum severity of error catches by Command.IO to not terminate the programme.
 Currently, only CommandErrors are caught.
 
+### Actions
+
+The action of a command is a function what call when the user type the command. It takes in parameter the list of words
+that follow the command (one argument by word).
+The function take an object in context (*this*) what provide utilities to manage the command execution :
+- **CommandError**: constructor of CommandError, configured for the command.
+- **RuntimeCommandError**: constructor of RuntimeCommandError, configured for the command.
+
 ## Exemple:
 
 #### Loading module:
@@ -123,5 +131,6 @@ commandio.beforeExit(function(){
 ## Planned features
 
 * Action's feedback and exception processing.
+* Command's parameters validation.
 * Define and manage strategy on multiple definition for an existing command.
 * Configurable, interception of exit event and POSIX exit signal for *before exit* actions.
