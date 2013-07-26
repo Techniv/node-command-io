@@ -196,7 +196,8 @@ function exit(){
 module.exports = {
     addCommand: addCommand,
 	addCommands: addCommands,
-	beforeExit: beforeExit
+	beforeExit: beforeExit,
+	errorLvl: Object.create(CONST.errorLvl)
 };
 
 
