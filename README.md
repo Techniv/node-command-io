@@ -25,18 +25,18 @@ Command.IO provide by defaut two commands on the application run :
 
 For developers, Command.IO provides the folowing methods :
 
-- **addCommand**: Registers a command and its action.
-- **addCommands**: Registers a list of command.
-- **beforeExit**: Registers a 'before exit' action (execute on exit command).
+* **addCommand**: Registers a command and its action.
+* **addCommands**: Registers a list of command.
+* **beforeExit**: Registers a 'before exit' action (execute on exit command).
 
 ### Command descriptor
 
 The **addCommand** and **addCommands** methods use the **command descriptor**. This is an object what describe the
 command. It take this following parameters :
-- **name** (mandatory): this is the name of command used to recognize it when the user call it. Space are not allow.
-- **description** (mandatory): this is a description of your command what used to generate the inline help.
-- **action** (mandatory): this is a callback (function) what execute when the command is call.
-- **exceptionCatchLvl**: this is the minimum severity of error catches by Command.IO to not terminate the programme.
+* **name** (mandatory): this is the name of command used to recognize it when the user call it. Space are not allow.
+* **description** (mandatory): this is a description of your command what used to generate the inline help.
+* **action** (mandatory): this is a callback (function) what execute when the command is call.
+* **exceptionCatchLvl**: this is the minimum severity of error catches by Command.IO to not terminate the programme.
 Currently, only CommandErrors are caught.
 
 ### Actions
@@ -44,8 +44,13 @@ Currently, only CommandErrors are caught.
 The action of a command is a function what call when the user type the command. It takes in parameter the list of words
 that follow the command (one argument by word).
 The function take an object in context (*this*) what provide utilities to manage the command execution :
-- **CommandError**: constructor of CommandError, configured for the command.
-- **RuntimeCommandError**: constructor of RuntimeCommandError, configured for the command.
+* **name**: the name of the command.
+* **description**: the description of command.
+* **CommandError**: constructor of CommandError, configured for the command.
+  [View error management](https://github.com/Techniv/node-command-io/wiki/Error-management-in-command's-action)
+* **RuntimeCommandError**: constructor of RuntimeCommandError, configured for the command.
+  [View error management](https://github.com/Techniv/node-command-io/wiki/Error-management-in-command's-action)
+* **errorLvl**: a collection of constant with value of severity error level (`notice`,`error`,`critical`).
 
 ## Exemple:
 
@@ -122,10 +127,10 @@ commandio.beforeExit(function(){
 
 ## Changelog
 **0.2.0-a:**
-- Unification of *command descriptor*.
-- Add custom execution context for command action.
-- Add custom error.
-- Add internal logger system using `color`.
+* Unification of *command descriptor*.
+* Add custom execution context for command action.
+* Add custom error.
+* Add internal logger system using `color`.
 
 
 ## Planned features
