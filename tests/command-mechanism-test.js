@@ -37,7 +37,7 @@ module.exports = {
 	 * @param test
 	 */
 	throwingException: function(test){
-		test.expect(5);
+		test.expect(7);
 		var descriptor;
 
 
@@ -111,6 +111,36 @@ module.exports = {
 			commandio.processCommand(['runtime']);
 		});
 
+
+		// Native error test.
+
+		descriptor = {
+			name: 'native',
+			description: 'cdm desc',
+			action: function(){
+				throw new Error('Native Error');
+			}
+		};
+
+		commandio.addCommand(descriptor);
+		test.throws(function(){
+			commandio.processCommand(['native']);
+		});
+
+
+		descriptor = {
+			name: 'nativeCatch',
+			description: 'cdm desc',
+			catchNativeError: true,
+			action: function(){
+				throw new Error('Native Error');
+			}
+		};
+
+		commandio.addCommand(descriptor);
+		test.doesNotThrow(function(){
+			commandio.processCommand(['nativeCatch']);
+		});
 
 		test.done();
 	}

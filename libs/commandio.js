@@ -23,7 +23,8 @@ var stdin = process.stdin,
 			action: 'function'
 		},
 		descriptorOptType: {
-			exceptionCatchLvl: {type: 'number', value: 3}
+			exceptionCatchLvl: {type: 'number', value: 3},
+			catchNativeError: {type: 'boolean', value: false}
 		},
 		errorLvl: {
 			notice:		1,
@@ -82,20 +83,30 @@ function processCommand(params){
 	try{
 		descriptor.action.apply(descriptor.controller, params);
 	} catch (e){
-		switch(e.name){
-			case 'RuntimeCommandError':
-				logger.error('An unexpected error was occurred on "'+descriptor.name+'" command execution.');
-				throw e;
-				break;
-			case 'CommandError':
-				if(e.level >= descriptor.exceptionCatchLvl){
-					logger.error('An unexpected error was occurred on "'+descriptor.name+'" command execution.');
-					throw e;
-				}
-				break;
-		}
-		logger.error('An unexpected error was occurred on "'+descriptor.name+'" command execution.',e);
+		processError(e, descriptor);
 	}
+}
+
+function processError(error, descriptor){
+	switch(error.name){
+		case 'RuntimeCommandError':
+			logger.error('An unexpected error was occurred on "'+descriptor.name+'" command execution.');
+			throw error;
+			break;
+		case 'CommandError':
+			if(error.level >= descriptor.exceptionCatchLvl){
+				logger.error('An unexpected error was occurred on "'+descriptor.name+'" command execution.');
+				throw error;
+			}
+			break;
+		default:
+			if(!descriptor.catchNativeError){
+				logger.error('An unexpected error was occurred on "'+descriptor.name+'" command execution.');
+				throw error;
+			}
+			break;
+	}
+	logger.error('An unexpected error was occurred on "'+descriptor.name+'" command execution.',error);
 }
 
 /**
