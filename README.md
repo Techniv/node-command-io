@@ -38,6 +38,8 @@ command. It take this following parameters :
 * **action** (mandatory): this is a callback (function) what execute when the command is call.
 * **exceptionCatchLvl**: this is the minimum severity of error catches by Command.IO to not terminate the programme.
 Currently, only CommandErrors are caught.
+* **catchNativeError**: *false* by default. If *true* all the unrecognized error (like the native Error object) was
+catch and log but not termite the programme.
 
 ### Actions
 
