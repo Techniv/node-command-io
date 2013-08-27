@@ -39,7 +39,9 @@ command. It take this following parameters :
 * **exceptionCatchLvl**: this is the minimum severity of error catches by Command.IO to not terminate the programme.
 Currently, only CommandErrors are caught.
 * **catchNativeError**: *false* by default. If *true* all the unrecognized error (like the native Error object) was
-catch and log but not termite the programme.
+catch and log but not termite the programme. If it is a function, it is call when a native error was catch to process
+the error. The function take the error object in parameter and take the same context than the command action.
+[View error management](https://github.com/Techniv/node-command-io/wiki/Error-management-in-command's-action)
 
 ### Actions
 
@@ -127,7 +129,11 @@ commandio.beforeExit(function(){
 });
 ```
 
-## Changelog
+## Changelogs
+**0.2.0-a2:**
+* Add native error processing.
+* Support multiple type in descriptor.
+
 **0.2.0-a:**
 * Unification of *command descriptor*.
 * Add custom execution context for command action.
