@@ -24,7 +24,7 @@ var stdin = process.stdin,
 		},
 		descriptorOptType: {
 			exceptionCatchLvl: {type: 'number', value: 3},
-			catchNativeError: {type: 'boolean', value: false}
+			catchNativeError: {type: ['boolean', 'function'], value: false}
 		},
 		errorLvl: {
 			notice:		1,
@@ -103,6 +103,9 @@ function processError(error, descriptor){
 			if(!descriptor.catchNativeError){
 				logger.error('An unexpected error was occurred on "'+descriptor.name+'" command execution.');
 				throw error;
+			} else if( typeof descriptor.catchNativeError == 'function' ){
+				descriptor.catchNativeError.call(descriptor.controller, error);
+				return;
 			}
 			break;
 	}
@@ -304,7 +307,7 @@ function checkDescriptor(descriptor, err){
 	if(typeof descriptor != 'object') return false;
 	
 	for(var key in CONST.descriptorType){
-		if(typeof descriptor[key] != CONST.descriptorType[key]){
+		if(!checkType(descriptor[key], CONST.descriptorType[key])){
 			err.key = key;
 			err.expect = CONST.descriptorType[key];
 			err.type = typeof descriptor[key];
@@ -313,7 +316,7 @@ function checkDescriptor(descriptor, err){
 	}
 
 	for(var key in CONST.descriptorOptType){
-		if(typeof descriptor[key] != 'undefined' && typeof descriptor[key] == CONST.descriptorOptType[key].type) continue;
+		if(typeof descriptor[key] != 'undefined' && checkType(descriptor[key], CONST.descriptorOptType[key].type)) continue;
 		if(typeof descriptor[key] == 'undefined'){
 			if(typeof CONST.descriptorOptType[key].value != 'undefined') descriptor[key] = CONST.descriptorOptType[key].value;
 			continue;
@@ -322,6 +325,18 @@ function checkDescriptor(descriptor, err){
 		err.key = key;
 		err.expect = CONST.descriptorOptType[key].type;
 		err.type = typeof descriptor[key];
+		return false;
+	}
+
+	return true;
+}
+
+function checkType(arg, type){
+	if( ! Array.isArray(type) ){
+		type = [type];
+	}
+
+	if(type.indexOf(typeof arg) == -1){
 		return false;
 	}
 
