@@ -1,7 +1,7 @@
 # CHANGELOGS
 
-### 0.2.0
-**0.2.0-a2**:
+###0.2.0 - *28/08/13*:
+**0.2.0-a2** - *27/08/13*:
 * Add native error processing.
 * Support multiple type in descriptor.
 
