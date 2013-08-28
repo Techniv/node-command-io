@@ -1,6 +1,6 @@
 {
 	"name": "command.io",
-	"version": "0.2.0-a2",
+	"version": "0.2.0",
 	"description": "Console io provider for running Node.JS applications.",
 
 	"authors": {
