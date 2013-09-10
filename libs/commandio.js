@@ -39,7 +39,7 @@ var stdin = process.stdin,
 			action: help
 		},
 		exit: {
-			name: 'help',
+			name: 'exit',
 			description: 'Execute the exit callback and close the application.',
 			action: exit
 		}
