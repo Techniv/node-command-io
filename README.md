@@ -1,7 +1,7 @@
 Command.IO
 ==========
 
-![build-status](http://status.ci.techniv.fr/Command.IO)
+![build-status](http://status.ci.techniv.fr/Command.IO) - [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Techniv/node-command-io/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 This program is a library that provides management of the console user input during the execution of the application.
 With Command.IO, you can simply intercept the console input commands and bind action on this. For each command you
